@@ -2,9 +2,9 @@ TEMPLATE = subdirs
 
 CONFIG += ordered
 
-SUBDIRS = lib test
+SUBDIRS = rvjvmhelper test
 
-test.depends = lib
+test.depends = rvjvmhelper
 
 
 

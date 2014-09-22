@@ -295,23 +295,23 @@ void * RvJVMObject::vcallMethod(const QString name,  QString sign, va_list param
     clas = jenv->GetObjectClass(jobj);
     if (qjvm->CheckException(jenv))
     {
-        if (bstr) delete bstr;
-        if (parms) delete parms;
+        if (bstr) free(bstr);
+        if (parms) delete[] parms;
         return NULL;
     }
 
     if (!clas)
     {
-        if (bstr) delete bstr;
-        if (parms) delete parms;
+        if (bstr) free(bstr);
+        if (parms) delete[] parms;
         return NULL;
     }
 
     mid = jenv->GetMethodID(clas, name.toLatin1().constData(), csign.toLatin1().constData());
     if (!mid)
     {
-        if (bstr) delete bstr;
-        if (parms) delete parms;
+        if (bstr) free(bstr);
+        if (parms) delete[] parms;
         return NULL;
     }
 
@@ -425,8 +425,8 @@ void * RvJVMObject::vcallMethod(const QString name,  QString sign, va_list param
         if (qjvm->CheckException(jenv)) vret = NULL;
     }
 
-    if (bstr) delete bstr;
-    if (parms) delete parms;
+    if (bstr) free(bstr);
+    if (parms) delete[] parms;
 
     return vret;
 }

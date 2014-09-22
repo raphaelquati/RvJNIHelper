@@ -1,3 +1,3 @@
-INCLUDEPATH += . .. ../lib
+INCLUDEPATH += . .. ../rvjvmhelper
 
 

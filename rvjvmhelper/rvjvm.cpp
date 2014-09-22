@@ -10,7 +10,7 @@ RvJVM::RvJVM(const QString & p_classpath ) :
     m_env( nullptr ),
     m_jvm( nullptr )
 {
-
+    m_JVMoptions = new JavaVMOption[10];
     char *l_jvmtype = 0;
     char l_jrepath[MAXPATHLEN], l_jvmpath[MAXPATHLEN];
 
@@ -56,6 +56,8 @@ RvJVM::RvJVM(const QString & p_classpath ) :
 
 RvJVM::~RvJVM()
 {
+    delete m_JVMoptions;
+
     DestroyJVM();
 
     nativeLibrary->unload();
@@ -81,8 +83,10 @@ jboolean RvJVM::GetPublicJREHome(char *buf, jint bufsize) {
     HKEY key, subkey;
     /* Find the current version of the JRE */
     if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, JRE_KEY, 0, KEY_READ, &key) != 0) {
-        fprintf(stderr, "Error opening registry key '%s'\n", JRE_KEY);
-        return JNI_FALSE;
+        if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, JDK_KEY, 0, KEY_READ, &key) != 0) {
+            fprintf(stderr, "Error opening registry key '%s'\n", JRE_KEY);
+            return JNI_FALSE;
+        }
     }
 
     if (!GetStringFromRegistry(key, "CurrentVersion", version, sizeof(version))) {
@@ -112,7 +116,7 @@ jboolean RvJVM::GetPublicJREHome(char *buf, jint bufsize) {
     if (qEnvironmentVariableIsEmpty("JAVA_HOME")) {
         QProcess process;
         process.setProcessChannelMode(QProcess::MergedChannels);
-        process.start("java -XshowSettings:properties");
+        process.start("java",  QStringList() << "-XshowSettings:properties");
 
         QByteArray data;
 
@@ -123,7 +127,7 @@ jboolean RvJVM::GetPublicJREHome(char *buf, jint bufsize) {
             data.append(process.readAll());
 
         QString output(data.data());
-        qDebug() << output;
+        //qDebug() << output;
 
         bool found = false;
 
@@ -188,6 +192,7 @@ jboolean RvJVM::LoadJavaVM(const char *jvmpath)
 {
     m_CreateJavaVM = 0;
     m_GetDefaultJavaVMInitArgs = 0;
+
     nativeLibrary = new QLibrary(jvmpath);
     if (nativeLibrary->load()) {
         m_CreateJavaVM = (CreateJavaVM_t) nativeLibrary->resolve("JNI_CreateJavaVM");
@@ -206,12 +211,10 @@ jboolean RvJVM::InitializeJVM(JavaVM **pvm, JNIEnv **penv) {
     JavaVMInitArgs args;
     jint r;
 
-    memset(&args, 0, sizeof(args));
-    args.version  = JNI_VERSION_1_2;
+    args.version  = JNI_VERSION_1_6;
     args.nOptions = m_numJVMOptions;
     args.options  = m_JVMoptions;
     args.ignoreUnrecognized = JNI_FALSE;
-
     r = m_CreateJavaVM(pvm, (void **)penv, &args);
 
     return r == JNI_OK;
