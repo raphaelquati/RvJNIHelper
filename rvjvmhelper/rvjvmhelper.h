@@ -1,8 +1,6 @@
 #ifndef QJVMHELPER_H
 #define QJVMHELPER_H
 
-#define NOMINMAX
-
 #include "rvjvmhelper_global.h"
 #include <QtCore>
 
@@ -23,7 +21,7 @@ public:
     RvJVMObject * createGlobalObject(QString name, QString sign, ...);
 
 private:
-    void *RvJVMHelper::_createObject(QString name, QString sign, va_list args);
+    void *_createObject(QString name, QString sign, va_list args);
 
 };
 

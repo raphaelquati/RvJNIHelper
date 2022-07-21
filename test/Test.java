@@ -1,5 +1,3 @@
-import java.*;
-
 public class Test {
     void m() {
         System.out.println("m invoked()!");

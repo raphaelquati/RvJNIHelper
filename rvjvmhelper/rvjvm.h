@@ -1,8 +1,6 @@
 #ifndef QJVM_H
 #define QJVM_H
 
-#define NOMINMAX
-
 #include <jni.h>
 
 #ifdef WIN32
@@ -25,6 +23,7 @@
 
 #define DOTRELEASE  "1.3" /* Same for 1.3.1, 1.3.2 etc. */
 #define JRE_KEY	    "Software\\JavaSoft\\Java Runtime Environment"
+#define JDK_KEY	    "Software\\JavaSoft\\JDK"
 
 
 #ifdef WINDOWS
@@ -80,7 +79,7 @@ private:
     CreateJavaVM_t m_CreateJavaVM;
     GetDefaultJavaVMInitArgs_t m_GetDefaultJavaVMInitArgs;
 
-    JavaVMOption m_JVMoptions[10];
+    JavaVMOption *m_JVMoptions;
     int m_numJVMOptions;
     JNIEnv *m_env;
     JavaVM *m_jvm;

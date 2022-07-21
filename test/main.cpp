@@ -5,8 +5,8 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    
-    RvJVMHelper* h = new RvJVMHelper(QString("."));
+
+    RvJVMHelper* h = new RvJVMHelper(a.applicationDirPath());
 
     RvJVMObject *obj = h->createObject("Test");
     obj->callMethod("m");
@@ -28,5 +28,7 @@ int main(int argc, char *argv[])
 
     delete h;
 
-    return a.exec();
+    a.exit(0);
+
+    return 0;
 }

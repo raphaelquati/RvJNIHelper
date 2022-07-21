@@ -6,8 +6,6 @@ TEMPLATE = lib
 
 DEFINES += QJVMHELPER_LIBRARY
 
-TARGET = ../../bin/RvJNIHelper
-
 QT       -= gui
 
 SOURCES += \
@@ -24,9 +22,11 @@ HEADERS +=\
     rvjvmthreadscope.h
 
 win32 {
-    INCLUDEPATH += "C:/Program Files/Java/jdk1.7.0_65/include"
-    INCLUDEPATH += "C:/Program Files/Java/jdk1.7.0_65/include/win32"
+    INCLUDEPATH += "C:/Program Files/Java/jdk-18.0.2/include"
+    INCLUDEPATH += "C:/Program Files/Java/jdk-18.0.2/include/win32"
 
-    LIBS += advapi32.lib
+
+    LIBS += -ladvapi32
 }
+
 
